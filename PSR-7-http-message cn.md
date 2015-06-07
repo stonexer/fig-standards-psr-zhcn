@@ -83,13 +83,9 @@ MUST 被实现保护，尤其是以`getHeaders()`获取时.
 
 ##### 多值报头
 
-In order to accommodate headers with multiple values yet still provide the
-convenience of working with headers as strings, headers can be retrieved from
-an instance of a `MessageInterface` as an array or a string. Use the
-`getHeaderLine()` method to retrieve a header value as a string containing all
-header values of a case-insensitive header by name concatenated with a comma.
-Use `getHeader()` to retrieve an array of all the header values for a
-particular case-insensitive header by name.
+为了让报头容纳多值，目前为止仍然为报头处理成字符串提供了方便。
+从 `MessageInterface` 的实例中获取的报头既可以是数组类型也可以是字符串类型的。使用 `getHeaderLine()` 方法可以通过名称获取到一个字符串类型的大小写不敏感的报头值，其中包含了被逗号连接的所有该名称对应的报头值。使用 `getHeader()` 方法可以通过名称获取到一个包含所有该大小写不敏感的报头值的数组。
+
 
 ```php
 $message = $message
@@ -103,7 +99,11 @@ $header = $message->getHeader('foo');
 // ['bar', 'baz']
 ```
 
-Note: Not all header values can be concatenated using a comma (e.g.,
+注: 并非所有的报头值可以被逗号连接（例如，`Set-Cookie`）。对于这样的报头，consumers of
+`MessageInterface`-based classes SHOULD rely on the `getHeader()` method
+for retrieving such multi-valued headers.
+
+注意: Not all header values can be concatenated using a comma (e.g.,
 `Set-Cookie`). When working with such headers, consumers of
 `MessageInterface`-based classes SHOULD rely on the `getHeader()` method
 for retrieving such multi-valued headers.
@@ -559,12 +559,12 @@ $stream = new Psr7StreamWrapper($file1->getStream());
 stream_copy_to_stream($stream, $s3wrapper);
 ```
 
-## 2. Package
+## 2. 包
 
-The interfaces and classes described are provided as part of the
-[psr/http-message](https://packagist.org/packages/psr/http-message) package.
+前文中描述的类和接口来源于
+[psr/http-message](https://packagist.org/packages/psr/http-message)  包.
 
-## 3. Interfaces
+## 3. 接口
 
 ### 3.1 `Psr\Http\Message\MessageInterface`
 
