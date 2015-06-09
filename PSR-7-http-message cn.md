@@ -126,18 +126,9 @@ foo.com                                 | bar.com                               
 - <sup id="rhc">2</sup> 操作前的请求中URI的Host部分
 - <sup id="uhc">3</sup> 被 `withUri()`注入的URI的Host部分
 
-### 1.3 流
+### 1.3 流（Stream）
 
-HTTP messages consist of a start-line, headers, and a body. The body of an HTTP
-message can be very small or extremely large. Attempting to represent the body
-of a message as a string can easily consume more memory than intended because
-the body must be stored completely in memory. Attempting to store the body of a
-request or response in memory would preclude the use of that implementation from
-being able to work with large message bodies. `StreamInterface` is used in
-order to hide the implementation details when a stream of data is read from
-or written to. For situations where a string would be an appropriate message
-implementation, built-in streams such as `php://memory` and `php://temp` may be
-used.
+HTTP消息由开始行（start-line），报头（header），和正文（body）构成。一条HTTP消息的正文既可能非常小，也可能特别巨大。尝试用字符串去描述一条消息的正文可能会消耗高于预期的内存，这是因为正文必须被完整的保存在内存中。尝试将一条请求或响应的正文存储在内存中的实现要排除处理很大消息正文的情况。在数据流的写入和读出时，`StreamInterface`用于隐藏具体的实现。对于某些情况字符串会是一个合理的消息实现，可以使用内置流比如`php://memory`和`php://temp` 。
 
 `StreamInterface` exposes several methods that enable streams to be read
 from, written to, and traversed effectively.
