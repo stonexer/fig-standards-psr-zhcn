@@ -99,38 +99,22 @@ $header = $message->getHeader('foo');
 // ['bar', 'baz']
 ```
 
-注: 并非所有的报头值可以被逗号连接（例如，`Set-Cookie`）。对于这样的报头，consumers of
-`MessageInterface`-based classes SHOULD rely on the `getHeader()` method
-for retrieving such multi-valued headers.
+注: 并非所有的报头值可以被逗号连接（例如，`Set-Cookie`）。对于这样的报头，以`MessageInterface`作为基类的用户 SHOULD 采用 `getHeader()` 方法去获得这样的多值报头。
 
-注意: Not all header values can be concatenated using a comma (e.g.,
-`Set-Cookie`). When working with such headers, consumers of
-`MessageInterface`-based classes SHOULD rely on the `getHeader()` method
-for retrieving such multi-valued headers.
 
-##### Host header
+##### Host（主机）报头
 
-In requests, the `Host` header typically mirrors the host component of the URI, as
-well as the host used when establishing the TCP connection. However, the HTTP
-specification allows the `Host` header to differ from each of the two.
+在请求中，`Host`报头 通常反映了URI中的主机部分，或是建立TCP连接时使用的主机。但是，HTTP规范允许 `Host`报头 不同于以上两种。
 
-During construction, implementations MUST attempt to set the `Host` header from
-a provided URI if no `Host` header is provided.
+在构造中，函数实现 MUST 在没有提供`Host`报头时尝试以提供的URI设置`Host`报头。
 
-`RequestInterface::withUri()` will, by default, replace the returned request's
-`Host` header with a `Host` header matching the host component of the passed
-`UriInterface`.
+`RequestInterface::withUri()` 默认会采用和传递的`UriInterface`相匹配的`Host`报头来替代返回请求中的`Host`报头。
 
-You can opt-in to preserving the original state of the `Host` header by passing
-`true` for the second (`$preserveHost`) argument. When this argument is set to
-`true`, the returned request will not update the `Host` header of the returned
-message -- unless the message contains no `Host` header.
+你可以选择传递设置第二个参数（`$preserveHost`）为`true` 来保护`Host`报头的原始状态。当该参数呗设置为`true` 时，返回的请求不会更新原有消息的`Host`报头 ——除非原有消息并无`Host`报头。
 
-This table illustrates what `getHeaderLine('Host')` will return for a request
-returned by `withUri()` with the `$preserveHost` argument set to `true` for
-various initial requests and URIs.
+下表格说明了对于各种初始请求和URI 在`$preserveHost`设置为`true`时`withUri()`返回的请求，调用`getHeaderLine('Host')`的返回值。
 
-Request Host header<sup>[1](#rhh)</sup> | Request host component<sup>[2](#rhc)</sup> | URI host component<sup>[3](#uhc)</sup> | Result
+请求Host报头<sup>[1](#rhh)</sup> | 请求主机部分<sup>[2](#rhc)</sup> | URI主机部分<sup>[3](#uhc)</sup> | 结果
 ----------------------------------------|--------------------------------------------|----------------------------------------|--------
 ''                                      | ''                                         | ''                                     | ''
 ''                                      | foo.com                                    | ''                                     | foo.com
@@ -138,13 +122,11 @@ Request Host header<sup>[1](#rhh)</sup> | Request host component<sup>[2](#rhc)</
 foo.com                                 | ''                                         | bar.com                                | foo.com
 foo.com                                 | bar.com                                    | baz.com                                | foo.com
 
-- <sup id="rhh">1</sup> `Host` header value prior to operation.
-- <sup id="rhc">2</sup> Host component of the URI composed in the request prior
-  to the operation.
-- <sup id="uhc">3</sup> Host component of the URI being injected via
-  `withUri()`.
+- <sup id="rhh">1</sup> 操作前的`Host`报头值.
+- <sup id="rhc">2</sup> 操作前的请求中URI的Host部分
+- <sup id="uhc">3</sup> 被 `withUri()`注入的URI的Host部分
 
-### 1.3 Streams
+### 1.3 流
 
 HTTP messages consist of a start-line, headers, and a body. The body of an HTTP
 message can be very small or extremely large. Attempting to represent the body
@@ -182,7 +164,7 @@ the fact that the stream instance may be mutable, and, as such, could alter
 the state of the message; when in doubt, create a new stream instance and attach
 it to a message to enforce state.
 
-### 1.4 Request Targets and URIs
+### 1.4 请求目标和URI
 
 Per RFC 7230, request messages contain a "request-target" as the second segment
 of the request line. The request target can be one of the following forms:
@@ -262,7 +244,7 @@ authority-form, and asterisk-form). When used, the composed URI instance can
 still be of use, particularly in clients, where it may be used to create the
 connection to the server.
 
-### 1.5 Server-side Requests
+### 1.5 服务器端请求
 
 `RequestInterface` provides the general representation of an HTTP request
 message. However, server-side requests need additional treatment, due to the
@@ -294,7 +276,7 @@ application-specific rules (such as path matching, scheme matching, host
 matching, etc.). As such, the server request can also provide messaging between
 multiple request consumers.
 
-### 1.6 Uploaded files
+### 1.6 上传文件
 
 `ServerRequestInterface` specifies a method for retrieving a tree of upload
 files in a normalized structure, with each leaf an instance of
