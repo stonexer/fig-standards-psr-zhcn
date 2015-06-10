@@ -126,24 +126,19 @@ foo.com                                 | bar.com                               
 - <sup id="rhc">2</sup> 操作前的请求中URI的Host部分
 - <sup id="uhc">3</sup> 被 `withUri()`注入的URI的Host部分
 
-### 1.3 流（Stream）
+### 1.3 Streams（流）
 
-HTTP消息由开始行（start-line），报头（header），和正文（body）构成。一条HTTP消息的正文既可能非常小，也可能特别巨大。尝试用字符串去描述一条消息的正文可能会消耗高于预期的内存，这是因为正文必须被完整的保存在内存中。尝试将一条请求或响应的正文存储在内存中的实现要排除处理很大消息正文的情况。在数据流的写入和读出时，`StreamInterface`用于隐藏具体的实现。对于某些情况字符串会是一个合理的消息实现，可以使用内置流比如`php://memory`和`php://temp` 。
+HTTP消息由开始行（start-line），报头（header），和正文（body）构成。一条HTTP消息的正文既可能非常小，也可能特别巨大。尝试用字符串去描述一条消息的正文可能会消耗高于预期的内存，这是因为正文必须被完整的保存在内存中。尝试将一条请求或响应的正文存储在内存中的实现要排除处理很大消息正文的情况。在数据流的写入和读出时，`StreamInterface`用于隐藏具体的实现。对于某些情况字符串会是一个合理的消息实现，可以使用内置 Stream 比如`php://memory`和`php://temp` 。
 
-`StreamInterface` exposes several methods that enable streams to be read
-from, written to, and traversed effectively.
+`StreamInterface` 公开了多种用于 Stream 的读取，写入，和有效经过的方法。
 
-Streams expose their capabilities using three methods: `isReadable()`,
-`isWritable()`, and `isSeekable()`. These methods can be used by stream
-collaborators to determine if a stream is capable of their requirements.
+Stream 用三个方法：`isReadable()`，`isWritable()`，和`isSeekable()`公开了其相对应的属性。 Stream 的协作者可以用这些方法来决定一个 Stream 是否满足他们的需要。
 
-Each stream instance will have various capabilities: it can be read-only,
-write-only, or read-write. It can also allow arbitrary random access (seeking
-forwards or backwards to any location), or only sequential access (for
-example in the case of a socket, pipe, or callback-based stream).
+每个stream实例都有多种属性：它可以是只读的，只写的，或是可读可取的。它也可以允许任意随机访问（搜索向前或向后的任意位置），或是仅允许顺序访问（比如socket（套接字），pipe（管道），或callback-based stream（基于回调流）的情况）。
 
-Finally, `StreamInterface` defines a `__toString()` method to simplify
-retrieving or emitting the entire body contents at once.
+最后，`StreamInterface`定义了一个`__toString()`方法用于简化对于整个正文内容的一次性取回或发出。
+
+不同于请求和响应的接口，`StreamInterface`并不是模型不变的。在实际的PHP流被包裹的情况下，是不可能要求不变性的，因为任何与资源交互的代码都有改变其状态的潜在风险（包括光标位置，内容，甚至更多）。我们的建议是
 
 Unlike the request and response interfaces, `StreamInterface` does not model
 immutability. In situations where an actual PHP stream is wrapped, immutability
@@ -157,8 +152,7 @@ it to a message to enforce state.
 
 ### 1.4 请求目标和URI
 
-Per RFC 7230, request messages contain a "request-target" as the second segment
-of the request line. The request target can be one of the following forms:
+根据 RFC 7230，请求消息包含在请求行的第二部分包含一个“请求目标”。该请求的目标可以是下列形式之一：
 
 - **origin-form**, which consists of the path, and, if present, the query
   string; this is often referred to as a relative URL. Messages as transmitted
