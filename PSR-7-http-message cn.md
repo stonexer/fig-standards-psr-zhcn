@@ -138,7 +138,7 @@ Stream 用三个方法：`isReadable()`，`isWritable()`，和`isSeekable()`公�
 
 最后，`StreamInterface`定义了一个`__toString()`方法用于简化对于整个正文内容的一次性取回或发出。
 
-不同于请求和响应的接口，`StreamInterface`并不是模型不变的。在实际的PHP流被包裹的情况下，是不可能要求不变性的，因为任何与资源交互的代码都有改变其状态的潜在风险（包括光标位置，内容，甚至更多）。我们的建议是
+不同于请求和响应的接口，`StreamInterface`并不是模型不变的。在实际的PHP流被包裹的情况下，是不可能要求不变性的，因为任何与资源交互的代码都有改变其状态的潜在风险（包括光标位置，内容，甚至更多）。我们建议，对于实现，应使用只读stream处理服务器端的请求和客户端的响应。实现者必须明白stream实例的可变性和这样做可能改变消息的状态。在有所怀疑时，创建一个新的stream实例病把它附在消息上去保证状态。
 
 Unlike the request and response interfaces, `StreamInterface` does not model
 immutability. In situations where an actual PHP stream is wrapped, immutability
